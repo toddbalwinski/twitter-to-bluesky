@@ -1,3 +1,17 @@
-# BlueskyToTwitterBot
-A bot that takes all of a users posts on Bluesky and automatically reposts them onto X(Twitter).
-I had originally wanted for this bot to do the opposite process (repost from X onto Bluesky) but with X's new API fetching posts is only availble on a paid plan of $200 a month. While this defeats the original purpose of the project of helping boster early bluesky with content from well known twitter accounts, it still allows me to learn and play with both APIs.
+# X to Bluesky Reposter Bot
+
+This bot reposts everything you post on X (Twitter) to Bluesky.
+
+twittertobluesky@gmail.com
+
+## Setup
+1. Clone the repo.
+2. Create a `.env` file based on `.env.example`.
+3. Fill in your Twitter handle, Bearer Token, and Bluesky handle & password.
+
+**Note:** Tweets will be posted as Bluesky posts under your Bluesky account.
+
+## Local Run
+```bash
+pip install -r requirements.txt
+python main.py
