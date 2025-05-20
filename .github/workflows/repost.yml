@@ -13,7 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true 
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
           fetch-depth: 0
 
       - name: Set up Python
@@ -32,12 +33,22 @@ jobs:
           BLUESKY_HANDLE:       ${{ secrets.BLUESKY_HANDLE }}
           BLUESKY_PASSWORD:     ${{ secrets.BLUESKY_PASSWORD }}
 
-      - name: Commit updated seen_ids.json
-        uses: EndBug/add-and-commit@v9
-        with:
-          github_token:     ${{ secrets.GITHUB_TOKEN }}
-          add:              'seen_ids.json'
-          author_name:      'github-actions[bot]'
-          author_email:     'github-actions[bot]@users.noreply.github.com'
-          message:          'chore: update seen ids'
-          commit:           --allow-empty
+      - name: Commit & push updated seen_ids.json
+        run: |
+          # Configure git author
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage and commit (allow empty so it never fails)
+          git add seen_ids.json
+          git commit -m "chore: update seen ids" --allow-empty
+
+          # Rewrite origin to include the GITHUB_TOKEN for auth
+          git remote set-url origin \
+            https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+
+          # Push back to the same branch
+          git push origin HEAD:${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
