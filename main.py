@@ -1,35 +1,59 @@
-import os, json
+import os, json, requests
 from atproto import Client
-import requests
 
-# load state
-try:
-    seen = set(json.load(open('seen_ids.json')))
-except:
-    seen = set()
+STATE_FILE = "seen_ids.json"
 
-# Bluesky login
-bsky = Client()
-bsky.login(os.environ['BLUESKY_HANDLE'], os.environ['BLUESKY_PASSWORD'])
+def load_seen():
+    try:
+        return set(json.load(open(STATE_FILE)))
+    except FileNotFoundError:
+        return set()
 
-# fetch X tweets (replace with your fetch logic)
+def save_seen(seen):
+    with open(STATE_FILE, "w") as f:
+        json.dump(list(seen), f)
+
 def fetch_tweets():
-    url = f"https://api.twitter.com/2/timelines/by/username/{os.environ['TWITTER_HANDLE']}"
-    # …use your Bearer token, parse tweet text & ids…
-    # return list of {'id':id, 'text':text}
-    return []
+    """Return a list of dicts: [{'id':id, 'text':text}, …]"""
+    BEARER = os.environ["TWITTER_BEARER_TOKEN"]
+    handle = os.environ["TWITTER_HANDLE"]
+    headers = {"Authorization": f"Bearer {BEARER}"}
 
-# post back to Bluesky
-def post_to_bsky(text):
-    bsky.post(text)
+    # 1) look up the user ID
+    r = requests.get(f"https://api.twitter.com/2/users/by/username/{handle}", headers=headers)
+    r.raise_for_status()
+    user_id = r.json()["data"]["id"]
 
-tweets = fetch_tweets()
-for tw in tweets:
-    if tw['id'] in seen:
-        continue
-    post_to_bsky(tw['text'])
-    seen.add(tw['id'])
+    # 2) fetch their recent tweets (no retweets, no replies)
+    params = {
+        "exclude": "retweets,replies",
+        "max_results": 5,                # adjust as needed
+        "tweet.fields": "created_at"
+    }
+    r = requests.get(f"https://api.twitter.com/2/users/{user_id}/tweets",
+                     headers=headers, params=params)
+    r.raise_for_status()
+    data = r.json().get("data", [])
+    # debug print
+    print(f"Fetched {len(data)} tweets from @{handle}")
+    return [{"id": t["id"], "text": t["text"]} for t in data]
 
-# save state
-with open('seen_ids.json','w') as f:
-    json.dump(list(seen), f)
+def post_to_bluesky(text):
+    bsky = Client()
+    bsky.login(os.environ["BLUESKY_HANDLE"], os.environ["BLUESKY_PASSWORD"])
+    # this is the atproto call to create a new post
+    bsky.post(text=text)
+
+def main():
+    seen = load_seen()
+    tweets = fetch_tweets()
+    for tw in tweets:
+        if tw["id"] in seen:
+            continue
+        print("→ reposting:", tw["text"][:50])
+        post_to_bluesky(tw["text"])
+        seen.add(tw["id"])
+    save_seen(seen)
+
+if __name__ == "__main__":
+    main()
