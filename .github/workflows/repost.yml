@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
+          persist-credentials: true 
           fetch-depth: 0
 
       - name: Set up Python
@@ -35,7 +35,7 @@ jobs:
       - name: Commit updated seen_ids.json
         uses: EndBug/add-and-commit@v9
         with:
-          token:            ${{ secrets.GITHUB_TOKEN }}
+          github_token:     ${{ secrets.GITHUB_TOKEN }}
           add:              'seen_ids.json'
           author_name:      'github-actions[bot]'
           author_email:     'github-actions[bot]@users.noreply.github.com'
