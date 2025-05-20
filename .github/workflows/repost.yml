@@ -31,7 +31,9 @@ jobs:
       - name: Commit updated seen_ids.json
         uses: EndBug/add-and-commit@v9
         with:
-          author_name:    'github-actions[bot]'
-          author_email:   'github-actions[bot]@users.noreply.github.com'
-          message:        'chore: update seen ids'
-          add:            'seen_ids.json'
+            add: 'seen_ids.json'
+            author_name:    'github-actions[bot]'
+            author_email:   'github-actions[bot]@users.noreply.github.com'
+            message:        'chore: update seen ids'
+            commit: --allow-empty
+
