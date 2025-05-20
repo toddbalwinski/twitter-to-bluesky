@@ -1,0 +1,37 @@
+name: X → Bluesky repost
+
+on:
+  schedule:
+    # every 5 minutes
+    - cron:  '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  repost:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run repost bot
+        env:
+          TWITTER_HANDLE:     ${{ secrets.TWITTER_HANDLE }}
+          TWITTER_BEARER_TOKEN: ${{ secrets.TWITTER_BEARER_TOKEN }}
+          BLUESKY_HANDLE:     ${{ secrets.BLUESKY_HANDLE }}
+          BLUESKY_PASSWORD:   ${{ secrets.BLUESKY_PASSWORD }}
+        run: python main.py
+
+      - name: Commit updated seen_ids.json
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name:    'github-actions[bot]'
+          author_email:   'github-actions[bot]@users.noreply.github.com'
+          message:        'chore: update seen ids'
+          add:            'seen_ids.json'
