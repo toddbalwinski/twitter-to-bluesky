@@ -1,8 +1,10 @@
 # X to Bluesky Reposter Bot
 
-This bot reposts everything you post on X (Twitter) to Bluesky.
+This bot reposts everything a user posts on X (Twitter) to Bluesky.
 
-twittertobluesky@gmail.com
+Test Accounts:
+@XtoBluesky on X
+@autoreposter.bsky.social on Bluesky
 
 ## Setup
 1. Clone the repo.
