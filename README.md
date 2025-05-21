@@ -4,9 +4,9 @@ This bot reposts everything a user posts on X (Twitter) to Bluesky.
 
 Test Accounts:
 
-@XtoBluesky on X
+[@XtoBluesky](https://x.com/XtoBluesky) on X
 
-@autoreposter.bsky.social on Bluesky
+[@autoreposter.bsky.social](https://bsky.app/profile/autoreposter.bsky.social) on Bluesky
 
 ## Setup
 1. Clone the repo.
