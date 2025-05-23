@@ -115,7 +115,7 @@ Fetched 2 tweets from @your_handle
 
 ---
 
-## ☁Deployment via GitHub Actions
+## Deployment via GitHub Actions
 
 We use a simple workflow (`.github/workflows/repost.yml`) that:
 
@@ -134,7 +134,7 @@ _No external servers or credit cards required — everything runs on GitHub’s 
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 1. **Lookup user ID** via `GET /2/users/by/username/:username`  
 2. **Fetch recent tweets** via `GET /2/users/:id/tweets?exclude=retweets,replies&max_results=5`  
@@ -144,7 +144,7 @@ _No external servers or credit cards required — everything runs on GitHub’s 
 
 ---
 
-## 📝 File Structure
+## File Structure
 
 ```
 ├── main.py                      # core bot logic
@@ -172,7 +172,7 @@ _No external servers or credit cards required — everything runs on GitHub’s 
 
 ---
 
-## 📜 License
+## License
 
 This project is open-source and available under the [MIT License](LICENSE).
 
