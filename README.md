@@ -95,7 +95,7 @@ export BLUESKY_PASSWORD="your_password"
 
 ---
 
-## ▶Run Locally
+## Run Locally
 
 With your env-vars set and virtualenv activated:
 
